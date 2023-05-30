@@ -9,29 +9,17 @@ const MyComponent = () => {
   
 
   const fetchData = () => {
-    fetch('http://localhost:5000/data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error en la solicitud');
-        }
-        return response.json();
-      })
+    fetch('http://localhost:5000/data')
+      .then(response => response.json())
       .then(data => {
         console.log(data);
-        setData(data.message); // Guarda el mensaje recibido en el estado 'data'
+        setData(data.message);
+        console.log(data.message);
       })
       .catch(error => {
         console.error('Error:', error);
       });
   };
-  
-  
   
   
 
