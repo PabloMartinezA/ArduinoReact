@@ -10,26 +10,20 @@ def before_request():
         # Si la solicitud es POST y contiene datos en formato JSON, se procesa
         pass  # Aquí puedes realizar las acciones necesarias antes de la solicitud
 
-@app.route('/data', methods=['POST', 'GET'])
+@app.route('/data', methods=['POST'])
 def get_data():
-    if request.method == 'POST':
-        # Obtiene los datos enviados desde Arduino
-        data = request.get_json()
-        
-        # Obtén el mensaje enviado por Arduino
-        message = data.get('message', '')
+    # Obtiene los datos enviados desde Arduino
+    data = request.get_json()
+    
+    # Obtén el mensaje enviado por Arduino
+    message = data.get('data', {}).get('message', '')  # Actualización en esta línea
 
-        # Crea la respuesta con el mensaje recibido
-        response = {'message': message}
+    # Crea la respuesta con el mensaje recibido
+    response = {'message': message}
 
-        print(response)  # Verifica que la respuesta se esté generando correctamente
+    print(response)  # Verifica que la respuesta se esté generando correctamente
 
-        return jsonify(response)
-    elif request.method == 'GET':
-        # En caso de una solicitud GET, puedes decidir qué respuesta enviar
-        response = {'message': 'Este es un ejemplo de respuesta para una solicitud GET'}
-        return jsonify(response)
-
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

@@ -74,7 +74,7 @@ void loop() {
   // Enviar un string al servidor
   Serial.println("Mandando datos al servidor");
   StaticJsonDocument<200> jsonDoc;
-  jsonDoc["message"] = message;
+  jsonDoc["data"]["message"] = message;
   String jsonData;
   serializeJson(jsonDoc, jsonData);
 
