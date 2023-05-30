@@ -18,6 +18,8 @@ int valoresLDR[5]; // Array para almacenar 5 valores del sensor LDR
 int maximo = 681;
 int minimo = 100;
 
+int message;
+
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
@@ -51,13 +53,15 @@ void setup() {
 }
 
 void loop() {
+  int sensorValue = analogRead(valorLDR);
+  message = sensorValue;
   
   Serial.print("Conectando con ");
   Serial.print(host);
   Serial.print(':');
   Serial.println(puerto);
 
-  // utilizar la clase WiFiClient para crear conexiones TCP
+  // Utilizar la clase WiFiClient para crear conexiones TCP
   WiFiClient client;
   if (!client.connect(host, puerto)) {
     Serial.println("Conexion fallida");
@@ -66,13 +70,15 @@ void loop() {
   }
 
   Serial.println("Conexion exitosa con servidor");
-  // enviar un string al servidor
+  
+  // Enviar un string al servidor
   Serial.println("Mandando datos al servidor");
   StaticJsonDocument<200> jsonDoc;
-  jsonDoc["message"] = "Hola desde ESP8266";
+  jsonDoc["message"] = message;
   String jsonData;
   serializeJson(jsonDoc, jsonData);
-   if (client.connected()) {
+
+  if (client.connected()) {
     client.print("POST /data HTTP/1.1\r\n");
     client.print("Host: ");
     client.print(host);
@@ -86,9 +92,7 @@ void loop() {
     delay(500); // Esperar respuesta del servidor
   }
 
-  Serial.println(jsonData);
-
-  // esperar a que datos sean disponibles
+  // Esperar a que los datos estén disponibles
   unsigned long timeout = millis();
   while (client.available() == 0) {
     if (millis() - timeout > 5000) {
@@ -98,17 +102,17 @@ void loop() {
     }
   }
 
-  // leer respuesta del servidor e imprimirlo en el puerto serial
+  // Leer respuesta del servidor e imprimirlo en el puerto serial
   Serial.println("Recibiendo desde servidor");
   while (client.available()) {
     char ch = static_cast<char>(client.read());
     Serial.print(ch);
   }
 
-  // cerrar la conexion con el servidor
+  // Cerrar la conexión con el servidor
   Serial.println();
-  Serial.println("Cerrando conexion");
+  Serial.println("Cerrando conexión");
   client.stop();
 
-  delay(5000);  // ejecutar cada 5 segs
+  delay(5000);  // Ejecutar cada 5 segundos
 }
