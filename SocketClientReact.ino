@@ -74,23 +74,20 @@ void loop() {
   // Enviar un string al servidor
   Serial.println("Mandando datos al servidor");
   StaticJsonDocument<200> jsonDoc;
-  jsonDoc["data"]["message"] = message;
+  jsonDoc["message"] = "Mensaje desde Arduino";
   String jsonData;
   serializeJson(jsonDoc, jsonData);
 
   if (client.connected()) {
-    client.print("POST /data HTTP/1.1\r\n");
-    client.print("Host: ");
-    client.print(host);
-    client.print("\r\n");
-    client.print("Content-Type: application/json\r\n");
-    client.print("Content-Length: ");
-    client.print(jsonData.length());
-    client.print("\r\n\r\n");
-    client.print(jsonData);
-    client.print("\r\n");
-    delay(500); // Esperar respuesta del servidor
-  }
+  client.println("POST /data HTTP/1.1");
+  client.println("Host: " + String(host));
+  client.println("Content-Type: application/json");
+  client.println("Content-Length: " + String(jsonData.length()));
+  client.println();
+  client.println(jsonData);
+  delay(500); // Esperar respuesta del servidor
+}
+
 
   // Esperar a que los datos estén disponibles
   unsigned long timeout = millis();

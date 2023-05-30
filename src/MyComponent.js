@@ -7,7 +7,6 @@ const MyComponent = () => {
     fetchData();
   }, []);
   
-
   const fetchData = () => {
     fetch('http://localhost:5000/data', {
       method: 'POST',
@@ -25,11 +24,11 @@ const MyComponent = () => {
         console.error('Error:', error);
       });
   };
-
+  
   return (
     <div>
       <h1>Componente de React</h1>
-      <p>{data}</p> {/* Muestra el mensaje si está disponible */}
+      {data ? <p>{data}</p> : null} {/* Muestra el mensaje si está disponible */}
     </div>
   );
 };

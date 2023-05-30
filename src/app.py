@@ -15,13 +15,12 @@ def get_data():
     # Obtiene los datos enviados desde Arduino
     data = request.get_json()
     
+    print(data)  # Verificar si se recibe el JSON correctamente
+
     # Obtén el mensaje enviado por Arduino
-    message = data.get('data', {}).get('message', '')  # Actualización en esta línea
+    message = data.get('message', '')
 
-    # Crea la respuesta con el mensaje recibido
     response = {'message': message}
-
-    print(response)  # Verifica que la respuesta se esté generando correctamente
 
     return jsonify(response)
 
